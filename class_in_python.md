@@ -90,7 +90,7 @@ print(my_computer.run_benchmark()) -->
 ## 简单封装(私有属性约定)
 <!-- class Wallet():
     def __init__(self,balance):
-        self.__balance = balance # 私有属性的封装 __
+        self.__balance = balance # 私有属性的封装 __ 外部无法直接访问该属性 但是 _ 则不受区域保护，外部也能直接访问
 
     def get_balance(self):
         return self.__balance
@@ -225,4 +225,80 @@ print(repr(color)) -->
 r1 = Rectangle(10,20)
 print(r1.area)
 r1.width = 20
-print(r1.area) --> -->
+print(r1.area) --> 
+
+## 综合练习
+<!-- class Animal():
+    def __init__(self,name,species,initial_energy):
+        self._name = name # 为什么这里要加 _ 呢？如果不加，会对我的后面代码有什么影响吗？ 解答：告诉python这是私有属性，请不要直接从外部访问或修改
+        self._species = species
+        self._energy = initial_energy
+
+    @property
+    def name(self):
+        return self._name 
+
+    @property
+    def energy(self):
+        return self._energy
+
+    def make_sound(self):
+        return "发出声音"
+    
+    def __str__(self):
+        return f"这是一只{self._species},名字是{self._name}"
+
+class Dog(Animal):
+    def __init__(self,name,breed):
+        super().__init__(name,"狗",100) # 为什么这里可以直接赋值呢？ 解答：因为子类继承了父类的属性，所以可以直接赋值
+        self.breed = breed # 为什么子类的属性又不加 _ 呢？ 解答：因为子类的属性是公开的，所以不需要加 _
+
+    def make_sound(self):
+        return f"{self.name}正在汪汪叫"
+
+    @Animal.name.setter # 为什么要这样写呢？是因为要调用父类的name属性吗？ 解答：是的
+    def name(self,new_name):
+        if len(new_name) < 2:
+            raise ValueError("狗的名字不能小于2个字符！")
+        self._name = new_name # 这里为什么要加 _ 呢？ 解答：防止无限递归，因为self._name是父类的属性，如果直接赋值，会调用父类的name属性，导致无限递归
+
+    def run(self):
+        self._energy -= 10 # 这里加上 _ 是因为父类在前面加上了 _ 的原因吗? 解答：是的
+        return f"{self.name}正在跑，当前能量是{self._energy}"
+
+class Zoo:
+    def __init__(self):
+        self.animals:list[Animal] = [] # 为什么要这样去写？还有没有更简单的方法呢？ 解答：可以直接写成 self.animals = []
+
+    def add_animal(self,animal:Animal): # animal:Animal 表示的是什么？ 解答：它表明 add_animal 方法期望接收一个名为 animal 的参数，并且这个参数的类型应该是 Animal 类的实例
+        self.animals.append(animal)
+        print(f"{animal.name}已加入动物园")
+
+    def perform_morning_check(self):
+        print("动物园早晨检查开始：")
+        for animal in self.animals:
+            print(f"[{animal.name}]:{animal.make_sound()}") # 为什么要加[]呢？  解答：为了视觉效果好一点
+
+zoo_keeper = Zoo()
+
+my_dog = Dog("旺财","拉布拉多")
+zoo_keeper.add_animal(my_dog) # 为什么这样就可以把动物添加进去了呢？ 解答：因为add_animal方法期望接收一个Animal类的实例，而my_dog是Dog类的实例，Dog类是Animal类的子类，所以my_dog可以被传递给add_animal方法
+
+my_cat = Animal("小花","猫",100)
+zoo_keeper.add_animal(my_cat)
+
+print(f"Dog的起始能量{my_dog.energy}")
+
+try:
+    my_dog.name = "A" # 为什么这里可以直接调用 Dog里面的name属性，他不是 被@Animal.name.setter 装饰了吗？ 解答：因为name属性被装饰了，所以可以直接调用
+except ValueError as e:
+    print(f"设置失败{e}")
+
+my_dog.name = "大黑" # 验证通过，成功设置名字
+print(f"新名字 (name property): {my_dog.name}")
+
+zoo_keeper.perform_morning_check()
+print("\n--- 验证 __str__")
+print(f"print(my_dog): {my_dog}")        -->
+
+
