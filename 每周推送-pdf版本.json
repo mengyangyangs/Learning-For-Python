@@ -1,0 +1,1051 @@
+{
+  "name": "每周推送-over",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.link }}",
+        "additionalFields": {},
+        "useCustomBody": true,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        -1664
+      ],
+      "id": "825f8b2e-16e4-41ca-89ff-890f2230ccfc",
+      "name": "Scrape a url and get its content",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "ZILe81jxTQpOuAOr",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 2,
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2752,
+        -1664
+      ],
+      "id": "89a929ff-d612-41f7-a3e4-f0ca7ef46a1a",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "你是一位专业的科技资讯筛选与摘要助理。  \n请根据输入的科技网站内容，筛选并提炼与以下主题相关的资讯、文章、产品、研究或新闻：  \n\n- macOS 系统及生态（包括软件开发、应用创新、Xcode、Swift、Apple Silicon 等）  \n- 人工智能（AI+）相关技术、项目、工具或趋势  \n- 视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）  \n- 工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）  \n\n筛选规则：\n1. 若内容涉及以上任一主题，即认为是相关内容。  \n2. 忽略纯娱乐、金融、体育、八卦等不相关内容。  \n3. 保留新闻的主要标题、来源、时间、关键内容摘要（约100~200字）。  \n4. 输出格式统一为 Markdown 列表，例如：\n   - **标题**（来源，日期）  \n     摘要内容。  \n\n如果内容数量较多，请按主题分组输出."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2304,
+        -1760
+      ],
+      "id": "fd5af2b8-19cc-48a1-8297-1da020eca6b2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        -1536
+      ],
+      "id": "66ed2df2-40bf-4bbd-b0ff-542212b2668e",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "j2jxok3Ti7Z03zhT",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "output"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        -848
+      ],
+      "id": "046a3bd9-e44c-4def-94b0-4f1bad0e924e",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        -848
+      ],
+      "id": "34fcd6b8-b365-413b-bf49-2ff90de410e6",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "fromEmail": "2956223408@qq.com",
+        "toEmail": "guangyang.meng@cygvision.com",
+        "subject": "科技新闻前沿🧑‍💻",
+        "html": "<p>您好，这是AI自动生成的报告，请查收附件中的PDF文件。</p>\n",
+        "options": {
+          "attachments": "data"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        -848
+      ],
+      "id": "224bcd47-321d-47a3-92c9-0604812fb442",
+      "name": "Send email",
+      "webhookId": "f4ca1a13-7072-4d36-95c9-c571b83802f2",
+      "credentials": {
+        "smtp": {
+          "id": "imPFFE70PfwtNnaI",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2976,
+        -1664
+      ],
+      "id": "d40ce964-0532-4128-aec2-3ad36806d738",
+      "name": "获取 TechCrunch"
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.link }}",
+        "additionalFields": {},
+        "useCustomBody": true,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        -1248
+      ],
+      "id": "922a9fea-b9cb-41a9-ba05-d69df1bf1f59",
+      "name": "Scrape a url and get its content1",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "ZILe81jxTQpOuAOr",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.link }}",
+        "additionalFields": {},
+        "useCustomBody": true,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        -848
+      ],
+      "id": "eaf857b9-2461-413e-8750-e833c50c8330",
+      "name": "Scrape a url and get its content2",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "ZILe81jxTQpOuAOr",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 2,
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2752,
+        -1248
+      ],
+      "id": "0d16d934-97a0-49a8-b2d6-712a16ef71d6",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "maxItems": 2,
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2752,
+        -848
+      ],
+      "id": "8ebddc58-af8f-4ae2-bc1a-aa5a2f2080a5",
+      "name": "Limit2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "你是一位专业的科技资讯筛选与摘要助理。  \n请根据输入的科技网站内容，筛选并提炼与以下主题相关的资讯、文章、产品、研究或新闻：  \n\n- macOS 系统及生态（包括软件开发、应用创新、Xcode、Swift、Apple Silicon 等）  \n- 人工智能（AI+）相关技术、项目、工具或趋势  \n- 视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）  \n- 工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）  \n\n筛选规则：\n1. 若内容涉及以上任一主题，即认为是相关内容。  \n2. 忽略纯娱乐、金融、体育、八卦等不相关内容。  \n3. 保留新闻的主要标题、来源、时间、关键内容摘要（约100~200字）。  \n4. 输出格式统一为 Markdown 列表，例如：\n   - **标题**（来源，日期）  \n     摘要内容。  \n\n如果内容数量较多，请按主题分组输出."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2304,
+        -1360
+      ],
+      "id": "10679ae5-66d5-41e7-9214-19c4c8abcb69",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "你是一位专业的科技资讯筛选与摘要助理。  \n请根据输入的科技网站内容，筛选并提炼与以下主题相关的资讯、文章、产品、研究或新闻：  \n\n- macOS 系统及生态（包括软件开发、应用创新、Xcode、Swift、Apple Silicon 等）  \n- 人工智能（AI+）相关技术、项目、工具或趋势  \n- 视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）  \n- 工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）  \n\n筛选规则：\n1. 若内容涉及以上任一主题，即认为是相关内容。  \n2. 忽略纯娱乐、金融、体育、八卦等不相关内容。  \n3. 保留新闻的主要标题、来源、时间、关键内容摘要（约100~200字）。  \n4. 输出格式统一为 Markdown 列表，例如：\n   - **标题**（来源，日期）  \n     摘要内容。  \n\n如果内容数量较多，请按主题分组输出."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2304,
+        -960
+      ],
+      "id": "38fb36cf-4f36-4201-b7a9-56a34c0bb7dd",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        -1136
+      ],
+      "id": "a4c2a31f-a07d-442d-8cb8-9d23723aa8a1",
+      "name": "DeepSeek Chat Model1",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "j2jxok3Ti7Z03zhT",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        -736
+      ],
+      "id": "533e0331-5e76-499b-8b36-2a7316452d4b",
+      "name": "DeepSeek Chat Model2",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "j2jxok3Ti7Z03zhT",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1952,
+        -896
+      ],
+      "id": "fe8adb1d-2a4a-4496-b9e5-1bffc4d610b7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.link }}",
+        "additionalFields": {},
+        "useCustomBody": true,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        -448
+      ],
+      "id": "339da15e-3163-4347-afb2-53395c4a559e",
+      "name": "Scrape a url and get its content3",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "ZILe81jxTQpOuAOr",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 2,
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2752,
+        -448
+      ],
+      "id": "b0b8c8ad-d3ea-4acd-b58e-8f7f208b2d44",
+      "name": "Limit3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "你是一位专业的科技资讯筛选与摘要助理。  \n请根据输入的科技网站内容，筛选并提炼与以下主题相关的资讯、文章、产品、研究或新闻：  \n\n- macOS 系统及生态（包括软件开发、应用创新、Xcode、Swift、Apple Silicon 等）  \n- 人工智能（AI+）相关技术、项目、工具或趋势  \n- 视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）  \n- 工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）  \n\n筛选规则：\n1. 若内容涉及以上任一主题，即认为是相关内容。  \n2. 忽略纯娱乐、金融、体育、八卦等不相关内容。  \n3. 保留新闻的主要标题、来源、时间、关键内容摘要（约100~200字）。  \n4. 输出格式统一为 Markdown 列表，例如：\n   - **标题**（来源，日期）  \n     摘要内容。  \n\n如果内容数量较多，请按主题分组输出."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2304,
+        -560
+      ],
+      "id": "f59b80ed-ca8d-4507-bb72-2eefcc9ca8b5",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        -336
+      ],
+      "id": "d734e63a-2e3f-4529-8133-a7bc3c25fa4c",
+      "name": "DeepSeek Chat Model3",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "j2jxok3Ti7Z03zhT",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.technologyreview.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2976,
+        -448
+      ],
+      "id": "e04a7f5f-9957-42de-b2d9-aad837212a33",
+      "name": "MIT Technology Review — AI 专题"
+    },
+    {
+      "parameters": {
+        "url": "https://venturebeat.com/category/ai/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2976,
+        -1248
+      ],
+      "id": "bd0736b0-e196-4090-af0c-97119a5b94e8",
+      "name": "VentureBeat AI"
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/tag/artificial-intelligence/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2976,
+        -848
+      ],
+      "id": "e89ea007-ae08-450e-93db-61c6a787505c",
+      "name": "TechCrunch AI"
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.link }}",
+        "additionalFields": {},
+        "useCustomBody": true,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        -48
+      ],
+      "id": "a41bc5ca-b7c5-4390-9145-b14c94873b63",
+      "name": "Scrape a url and get its content4",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "ZILe81jxTQpOuAOr",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 2,
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2752,
+        -48
+      ],
+      "id": "d09ba7b9-0a5d-4c74-b4c3-c351013864cf",
+      "name": "Limit4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "你是一位专业的科技资讯筛选与摘要助理。  \n请根据输入的科技网站内容，筛选并提炼与以下主题相关的资讯、文章、产品、研究或新闻：  \n\n- macOS 系统及生态（包括软件开发、应用创新、Xcode、Swift、Apple Silicon 等）  \n- 人工智能（AI+）相关技术、项目、工具或趋势  \n- 视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）  \n- 工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）  \n\n筛选规则：\n1. 若内容涉及以上任一主题，即认为是相关内容。  \n2. 忽略纯娱乐、金融、体育、八卦等不相关内容。  \n3. 保留新闻的主要标题、来源、时间、关键内容摘要（约100~200字）。  \n4. 输出格式统一为 Markdown 列表，例如：\n   - **标题**（来源，日期）  \n     摘要内容。  \n\n如果内容数量较多，请按主题分组输出."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -2304,
+        -48
+      ],
+      "id": "5e141b56-e2fd-42e2-acdf-2f23356b5fa2",
+      "name": "AI Agent4"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        192
+      ],
+      "id": "8c3b0dc5-6501-40d9-b710-a5df914392b8",
+      "name": "DeepSeek Chat Model4",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "j2jxok3Ti7Z03zhT",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://rss.arxiv.org/rss/cs.AI",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -2976,
+        -48
+      ],
+      "id": "cd0ac74f-f72d-495a-adfb-7e24791378e0",
+      "name": "arXiv — AI 研究论文分类"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 2,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3200,
+        -848
+      ],
+      "id": "751560f9-ef0c-4c39-a2c6-3f1fba7bc6de",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "你是一名具有创业思维的AI开发者与产品分析师，善于从最新科技趋势中发现机会，并结合市场现有产品，提出能在短期内落地的创新方案。\n\n【任务目标】  \n请阅读以下输入（可能是科技资讯摘要、行业新闻、或我提供的关键词）。  \n根据输入内容，完成两类分析任务：\n\n---\n\n（一）趋势与创新方向分析  \n从输入内容中提炼出3–5个技术趋势或创新方向，并针对每个趋势输出以下信息：\n\n---\n### 🚀 趋势：{标题}  \n🔧 **技术说明：** {50字内简述该趋势的核心原理或技术路径}  \n💡 **项目建议：** {你能在1–4周内开发的原型或产品，说明用到的语言、框架或API}  \n👥 **用户群体：** {目标用户或潜在市场价值}  \n---\n\n**要求：**  \n- 趋势应源自真实的技术发展或应用变化；  \n- 项目建议需可行、可快速验证；  \n- 尽量结合 AI、自动化、数据分析、智能交互等领域。\n\n---\n\n（二）关键词竞品与差异化分析  \n关键词如下：  \n- macOS 系统及生态（包括软件开发、应用创新、Xcode、Swift、Apple Silicon 等）  \n- 人工智能（AI+）相关技术、项目、工具或趋势  \n- 视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）  \n- 工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）  \n\n请执行以下任务：  \n1. 搜索或推断市场上与该关键词相关的 3–5 个产品或服务；  \n2. 对比它们的核心功能、技术亮点与不足；  \n3. 最后提出一个你可以短期实现、具有差异化优势的创新方向。\n\n---\n\n### 🧩 关键词：{关键词}  \n**🧠 竞品 / 产品对比分析**\n\n请严格按如下格式输出表格（在 ```markdown 块中输出，以保持等宽对齐效果）：\n\n```markdown\n| 🏷️ 产品名           | ⚙️ 功能概述         | 🚀 技术亮点           | ⚠️ 不足或改进机会           |\n|:--------------------|:--------------------|:----------------------|:----------------------------|\n| Apple Intelligence  | 系统级生成式 AI     | 隐私优先设计，软硬一体 | 功能限制多，仅限新设备     |\n| Xcode Cloud         | 云端 CI/CD 服务     | 深度集成苹果开发栈     | 封闭生态，定价偏高         |\n| Swift Playgrounds   | 交互式编程学习工具   | 直观代码可视化         | 缺乏高级开发功能           |\n```\n\n💡 **差异化创新建议：**  \n{基于竞品分析提出你能落地的独特产品思路，说明可行的技术栈（语言/框架/API）与核心价值。}\n\n---\n\n【输出规范】  \n- 两部分（趋势分析与竞品分析）可同时或单独出现；  \n- 输出使用整齐的表格与符号排版，确保视觉对齐；  \n- 保持专业、简洁、可读性强；  \n- 所有输出均以结构化格式呈现，便于直接使用或展示。\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1504,
+        -848
+      ],
+      "id": "0c7cf10b-4180-4976-9ee6-f8b373d59581",
+      "name": "AI Agent5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        -624
+      ],
+      "id": "64e203f8-428c-4a29-8c80-b4329d6b04a6",
+      "name": "DeepSeek Chat Model5",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "j2jxok3Ti7Z03zhT",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 获取 AI 分析内容\nlet content = $json.data || $json.html || $json.output || '（没有可用内容）';\n\n// ===== HTML 转 Markdown 并优化排版 =====\nconst htmlToMarkdown = (html) => {\n  if (!html) return '';\n  return html\n    .replace(/<p>(.*?)<\\/p>/g, '$1\\n')              // 段落\n    .replace(/<strong>(.*?)<\\/strong>/g, '**$1**')  // 加粗\n    .replace(/<h1.*?>(.*?)<\\/h1>/g, '# $1')         // 一级标题\n    .replace(/<h2.*?>(.*?)<\\/h2>/g, '## $1')        // 二级标题\n    .replace(/<h3.*?>(.*?)<\\/h3>/g, '### $1')       // 三级标题\n    .replace(/<hr\\s*\\/?>/g, '---')                  // 分割线\n    .replace(/&nbsp;/g, ' ')\n    .replace(/<(div|span|section|article|header|footer|aside)[^>]*>/gi, '')\n    .replace(/<\\/(div|span|section|article|header|footer|aside)>/gi, '')\n    .replace(/<[^>]+>/g, '')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n};\n\n// 转换 Markdown\ncontent = htmlToMarkdown(content);\n\n// ===== 生成简单 HTML 用于 PDF =====\nlet htmlContent = content.replace(/\\n/g, '<br />');\n\n// 保证 HTML 长度 ≥ 10\nif (htmlContent.trim().length < 10) {\n  htmlContent = '<p>无内容</p>';\n}\n\n// ===== 定义 Markdown 文件名 =====\nconst mdFileName = `AI_Report_${new Date().toISOString().slice(0,10)}.md`;\n\n// 转换为 Markdown 二进制\nconst mdBinaryData = await this.helpers.prepareBinaryData(\n  Buffer.from(content, 'utf8'),\n  mdFileName,\n  'text/markdown'\n);\n\n// ===== 返回 JSON + Markdown 二进制 =====\nreturn [\n  {\n    json: {\n      htmlContent  // 给 PDF 节点 Expression 使用\n    },\n    binary: {\n      data: mdBinaryData  // Markdown 文件\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        -848
+      ],
+      "id": "9f63c9ba-1f82-4d2e-a182-7c83dd207f60",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "resource": "conversion",
+        "htmlContent": "=<html>\n  <head>\n    <meta charset=\"UTF-8\" />\n    <style>\n      /* 中文和 Unicode 支持 */\n      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600&display=swap');\n      @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');\n\n      body {\n        font-family: 'Noto Sans SC', 'Microsoft YaHei', 'Noto Color Emoji', sans-serif;\n        font-size: 14px;\n        color: #333;\n        line-height: 1.6;\n      }\n\n      h1, h2, h3 {\n        font-weight: 600;\n        color: #222;\n      }\n\n      p {\n        margin: 6px 0;\n      }\n    </style>\n  </head>\n  <body>\n    {{$node[\"Convert to File\"].json.htmlContent}}\n  </body>\n</html>\n",
+        "conversionOptions": {}
+      },
+      "type": "@pdfgeneratorapi/n8n-nodes-pdf-generator-api.pdfGeneratorApi",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        -848
+      ],
+      "id": "4e1252f3-b8c9-496e-8b6e-af4833daee1c",
+      "name": "Convert HTML content to PDF",
+      "credentials": {
+        "pdfGeneratorApi": {
+          "id": "iIJ5z04UOCXXm7rJ",
+          "name": "PDF Generator account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const pdfNode = $node[\"Convert HTML content to PDF\"];\nconst pdfBase64 = pdfNode.json.response || \"\";\nconst filename = pdfNode.json.filename || \"AI_Report.pdf\";\n\nconst base64ToUse = pdfBase64.length > 50 ? pdfBase64 : Buffer.from(\"<p>无内容</p>\").toString(\"base64\");\nconst buffer = Buffer.from(base64ToUse, \"base64\");\nconst pdfBinary = await this.helpers.prepareBinaryData(buffer, filename, \"application/pdf\");\n\nreturn [\n  {\n    json: { notice: \"PDF binary generated successfully\" },\n    binary: { data: pdfBinary }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        -720
+      ],
+      "id": "6386d949-a996-4bb8-8c20-06ae1a50e242",
+      "name": "Make PDF Binary"
+    }
+  ],
+  "pinData": {
+    "Aggregate": [
+      {
+        "json": {
+          "output": [
+            "以下是根据您提供的科技网站内容，筛选并提炼出的与指定主题相关的资讯。内容已按主题分组，并遵循输出格式要求。\n\n### 人工智能（AI+）\n- **Oxford spinout RADiCAIT uses AI to make diagnostic imaging more affordable and accessible**（TechCrunch，2025年10月27日）  \n  牛津大学分拆公司RADiCAIT利用生成式深度神经网络，将CT扫描转换为PET图像，以降低成本和提升可及性。该技术通过比较CT与PET扫描数据，学习映射模式并聚焦临床关键特征，已进入肺癌检测的临床试点阶段，并计划进行FDA临床试验。\n\n- **Biotech Nephrogen combines AI and gene therapy to reverse kidney disease**（TechCrunch，2025年10月27日）  \n  Nephrogen运用AI平台开发基因治疗递送系统，针对遗传性肾脏疾病（如多囊肾病），通过高效载体将药物精准输送至病变细胞。其技术效率较现有FDA批准载体提升100倍，预计2027年进入临床研究，目前正进行400万美元种子轮融资。\n\n- **The 2025 Startup Battlefield Top 20 are here**（TechCrunch，2025年10月27日）  \n  涵盖多个AI驱动项目，包括：RADiCAIT（医学影像AI）、Nephrogen（生物技术AI平台）、Mbodi（机器人技能自然语言教学）、Pytho AI（国防任务规划AI工具）、Cyphr（无偏见资本部署AI）、Elloe AI（企业生成式AI安全平台）等，展示AI在医疗、工业、金融等领域的创新应用。\n\n### 视觉计算\n- **Skyline Nav AI delivers GPS-independent navigation for drones and vehicles**（TechCrunch，2025年10月27日）  \n  Skyline Nav AI结合计算机视觉与地理空间数据，为无人机、车辆等提供无需GPS、蜂窝或Wi-Fi的精准导航，定位精度达10-100厘米，适用于复杂环境下的自主移动系统。\n\n### 工业视觉检测与自动化\n- **Mbodi teaches robots new skills via natural language**（TechCrunch，2025年10月27日）  \n  Mbodi通过自然语言接口快速训练机器人新技能，支持生产级自主系统在几分钟内部署，适用于工业自动化场景，提升制造业的灵活性与效率。\n\n- **Glīd transforms freight logistics with autonomous, electrified transport**（TechCrunch，2025年10月27日）  \n  Glīd开发自主电动公铁联运系统，重新定义首英里物流交付，通过自动化与视觉技术优化运输流程，提升工业物流的安全性与可持续性。\n\n**说明**：其他内容（如Miraqules的凝血技术、纯生物科技或活动公告）未涉及指定主题，已按规则忽略。所有摘要均基于原文关键细节提炼，确保符合主题相关性与长度要求。",
+            "根据您提供的主题，我已筛选出相关内容。以下是符合要求的科技资讯摘要：\n\n## 人工智能（AI+）相关技术\n\n- **Biotech Nephrogen combines AI and gene therapy to reverse kidney disease — check it out at TechCrunch Disrupt 2025**（TechCrunch，2025年10月27日）  \n  生物技术初创公司Nephrogen结合人工智能和基因疗法来逆转肾脏疾病。该公司使用AI和先进筛选技术开发专门的递送系统，能够安全地将基因编辑药物输送到肾脏中的精确细胞。其递送机制比FDA目前批准的\"载体\"效率高出100倍，预计2027年将进入临床研究阶段。\n\n- **Defense startup Pytho AI wants to turbocharge military mission planning and it will show off its tech at Disrupt 2025**（TechCrunch，2025年10月27日）  \n  国防科技初创公司Pytho AI旨在通过AI技术将军事任务规划从数天压缩到几分钟。该公司开发了基于AI代理的软件系统，使用模板结构而非聊天机器人界面，能够生成各种格式的任务计划。该系统已与多个军事部门合作，通过嵌入工程师与部队共同构建规划工作流程。\n\n- **Mbodi will show how it can train a robot using AI agents at TechCrunch Disrupt 2025**（TechCrunch，2025年10月27日）  \n  Mbodi公司开发了基于云到边缘系统的AI代理技术，使机器人训练更加简单快捷。用户通过自然语言提示软件，Mbodi的AI代理集群将任务分解为较小的子任务并协作收集所需信息来快速训练机器人。该技术特别适用于消费品包装等频繁变化的任务环境。\n\n- **Oxford spinout RADiCAIT uses AI to make diagnostic imaging more affordable and accessible — catch it at TechCrunch Disrupt 2025**（TechCrunch，2025年10月27日）  \n  牛津大学分拆公司RADiCAIT利用AI将CT扫描转换为PET扫描，使诊断成像更加经济实惠和易于获取。该公司的基础模型通过比较CT和PET扫描来学习模式映射，能够生成统计上类似于真实化学PET扫描的图像。该技术已开始在麻省总医院布里格姆和UCSF Health等主要卫生系统进行肺癌测试的临床试点。\n\n## 工业视觉检测与自动化应用\n\n- **Mbodi will show how it can train a robot using AI agents at TechCrunch Disrupt 2025**（TechCrunch，2025年10月27日）  \n  Mbodi专注于拾取和包装自动化应用，目前正与一家财富100强消费品公司进行概念验证合作。该技术解决了因任务每日变化而无法使用机器人的问题，特别是在消费品包装领域，传统上这些工作仍由大量人力完成。公司计划在2026年开始部署其软件。",
+            "以下是根据您提供的主题筛选自VentureBeat网站的相关科技资讯摘要：\n\n### 人工智能（AI+）\n- **Is vibe coding ruining a generation of engineers?**（VentureBeat，2025年10月11日）  \n  探讨AI工具如何通过自动化重复任务、重构代码和实时错误检测来革新软件开发。文章指出，虽然AI编码助手（如Anthropic的Claude Code和微软的AutoGen、Semantic Kernel框架）能提升生产力，但过度依赖可能削弱开发者解决问题的核心技能，影响其成长为资深工程师。建议将AI用作交互式导师，结合代码审查和手动重构练习，以平衡自动化与教育。\n\n- **Minimax M2 is the new king of open source LLMs, especially for agentic tool**（VentureBeat，2025年10月27日）  \n  介绍Minimax M2作为开源大语言模型的新领导者，特别在代理工具使用方面表现出色，能自主操作其他软件功能（如网络搜索或定制应用），减少对人类指导的依赖，适用于企业环境。\n\n- **Anthropic rolls out Claude AI for finance, integrates with Excel to rival**（VentureBeat，2025年10月27日）  \n  Anthropic发布Claude for Excel，允许金融分析师在电子表格中直接与AI交互，并集成到Microsoft Copilot Studio和Researcher代理中，强化其在金融服务业AI平台的竞争力，强调精确性和合规性。\n\n- **Google Cloud takes aim at CoreWeave and AWS with managed Slurm for**（VentureBeat，2025年10月27日）  \n  报道Google Cloud推出托管Slurm服务，针对需要GPU资源的企业，支持自定义模型构建和微调，与CoreWeave和AWS竞争，助力AI模型开发扩展。\n\n- **From human clicks to machine intent: Preparing the web for agentic AI**（VentureBeat，2025年10月26日）  \n  分析AI驱动代理浏览网页的趋势，指出当前网络设计以人类为中心，而AI代理的兴起暴露了其脆弱性，需重新设计以支持机器意图。\n\n- **When your AI browser becomes your enemy: The Comet security disaster**（VentureBeat，2025年10月25日）  \n  讨论AI浏览器（如Perplexity的Comet）的安全风险，这些工具能自动浏览、点击和思考，但可能引发安全问题，强调在自动化中需平衡控制与可靠性。\n\n- **Thinking Machines challenges OpenAI’s AI scaling strategy, first**（VentureBeat，2025年10月24日）  \n  报道Thinking Machines研究员挑战OpenAI的扩展策略，主张AI发展应注重更好学习而非单纯扩大模型规模，推动更高效的学习方法。\n\n- **Mistral launches its own AI studio for quick development with its European**（VentureBeat，2025年10月24日）  \n  Mistral推出AI工作室，允许用户在几分钟内快速构建代理和AI应用，顺应AI提供商趋势，简化开发流程。\n\n- **Inside Ring-1T: Ant engineers solve reinforcement learning bottlenecks at**（VentureBeat，2025年10月24日）  \n  蚂蚁集团发布开源推理模型Ring-1T，拥有万亿参数，旨在解决强化学习瓶颈，推动AI推理能力发展。\n\n- **Google’s ‘watch and learn’ framework cracks the data bottleneck for training**（VentureBeat，2025年10月23日）  \n  Google Cloud和DeepMind开发新框架，解决计算机使用代理训练中的数据瓶颈，通过高质量示例规模化提升AI代理性能。\n\n- **OpenAI launches Company Knowledge in ChatGPT, letting you access your firm’s**（VentureBeat，2025年10月23日）  \n  OpenAI推出企业知识功能，允许ChatGPT访问内部公司数据，挑战Google在企业知识搜索领域的地位，提升AI在企业中的应用。\n\n- **Microsoft Copilot gets 12 big updates for fall, including new AI assistant**（VentureBeat，2025年10月23日）  \n  微软为Copilot AI助手发布12项更新，深化与Windows、Edge和Microsoft 365的集成，强调实用性和数据安全，增强工作与生活场景的辅助能力。\n\n- **AI is tearing companies apart: Writer AI CEO slams Fortune 500 leaders for**（VentureBeat，2025年10月23日）  \n  批评企业领导将AI转型委托给IT部门，导致数十亿美元投资失败，强调需整体战略而非技术部署错误。\n\n- **Sakana AI’s CTO says he’s ‘absolutely sick of transformers,’ the tech that powers**（VentureBeat，2025年10月23日）  \n  Sakana AI CTO表达对Transformer技术的厌倦，认为AI研究过于狭窄，呼吁探索新路径以推动创新。\n\n- **What enterprises can take away from Microsoft CEO Satya Nadella’s shareholder**（VentureBeat，2025年10月22日）  \n  总结微软CEO年度信函中的AI见解，包括近未来规划和技术栈开发建议，助力企业决策者参考。\n\n- **Kai-Fu Lee’s brutal assessment: America is already losing the AI hardware war**（VentureBeat，2025年10月22日）  \n  李开复评估中美AI竞争，认为中国将在消费AI和机器人制造领先，而美国保持企业AI和研究优势。\n\n- **Qwen’s new Deep Research update lets you turn its reports into webpages**（VentureBeat，2025年10月21日）  \n  阿里Qwen团队升级Deep Research工具，允许将AI报告转换为网页，增强研究输出和共享能力。\n\n- **DeepSeek drops open-source model that compresses text 10x through images**（VentureBeat，2025年10月21日）  \n  DeepSeek发布开源OCR模型，通过视觉表示将文本压缩10倍，挑战AI开发核心假设，可能扩展上下文窗口至数百万token。\n\n- **Google’s new vibe coding AI Studio experience lets anyone build, deploy apps**（VentureBeat，2025年10月21日）  \n  Google AI Studio升级vibe coding界面，允许非开发者快速构建和部署应用，简化AI应用开发流程。\n\n- **New Markovian thinking technique unlocks a path to million-token AI**（VentureBeat，2025年10月21日）  \n  Mila研究人员提出Markovian Thinking技术，提升LLM在复杂推理中的效率，降低计算成本，支持更长推理任务。\n\n- **OpenAI releases ChatGPT Atlas, an AI-enabled web browser to challenge Google**（VentureBeat，2025年10月21日）  \n  OpenAI发布AI浏览器Atlas，支持macOS，即将扩展至Windows和移动端，挑战Google Chrome在浏览器市场的主导地位。\n\n- **Claude Code comes to web and mobile, letting devs launch parallel jobs on**（VentureBeat，2025年10月20日）  \n  Anthropic将Claude Code扩展至网页和移动端，支持开发者并行启动任务，顺应代理群编码趋势，提升AI编码工具灵活性。\n\n### 视觉计算\n- **DeepSeek drops open-source model that compresses text 10x through images**（VentureBeat，2025年10月21日）  \n  DeepSeek发布开源OCR模型，利用视觉算法将文本压缩10倍，革新文本处理方式，可能推动语言模型上下文窗口大幅扩展，适用于图像识别和高效数据存储场景。\n\n### 工业视觉检测与自动化\n- **Inside Ring-1T: Ant engineers solve reinforcement learning bottlenecks at**（VentureBeat，2025年10月24日）  \n  蚂蚁集团的Ring-1T模型通过强化学习解决瓶颈，可应用于工业自动化和缺陷检测等场景，提升制造业智能化水平。\n\n以上摘要聚焦于AI、视觉计算和工业自动化主题，忽略了金融、娱乐等不相关内容。",
+            "基于您提供的科技网站内容，我已筛选出与以下主题相关的资讯：\n\n- **人工智能（AI+）相关技术、项目、工具或趋势**\n- **视觉计算（包括计算机视觉、图像识别、OCR、视觉算法）**\n- **工业视觉检测与自动化应用（如缺陷检测、制造业智能化、工业AI）**\n\n以下是相关内容的摘要，按主题分组输出：\n\n### 人工智能（AI+）\n- **When dirt meets data: ScottsMiracle-Gro saved $150M using AI**（VentureBeat，2025-10-11）  \n  园艺公司ScottsMiracle-Gro通过AI转型实现供应链节约，利用无人机视觉系统实时测量库存体积，并构建基于Google Gemini LLM的AI代理系统处理客户咨询与产品推荐。公司还应用预测模型分析天气、消费者情绪等60多个因素，动态调整营销资源，提升响应效率90%。\n\n- **Minimax M2 is the new king of open source LLMs, especially for agentic tool**（VentureBeat，2025-10-27）  \n  Minimax M2开源大语言模型在代理工具使用方面表现突出，支持自主调用外部软件功能（如网络搜索、定制应用），适用于企业级AI代理开发，挑战DeepSeek与Qwen等现有模型。\n\n- **Anthropic rolls out Claude AI for finance, integrates with Excel to rival**（VentureBeat，2025-10-27）  \n  Anthropic推出Claude for Excel，使金融分析师能在电子表格内直接与AI交互，同时集成Microsoft Copilot Studio与Researcher代理，强化金融服务的精准性与合规性。\n\n- **Google Cloud takes aim at CoreWeave and AWS with managed Slurm for**（VentureBeat，2025-10-27）  \n  Google Cloud推出托管Slurm服务，支持企业构建或微调自有大模型，提供GPU资源管理，对标CoreWeave与AWS的AI基础设施解决方案。\n\n- **From human clicks to machine intent: preparing the web for agentic AI**（VentureBeat，2025-10-26）  \n  分析AI代理浏览对网页设计的冲击，指出当前以人类为中心的网页结构需适应机器意图，为自动化AI浏览优化内容与交互逻辑。\n\n- **When your AI browser becomes your enemy: the Comet security disaster**（VentureBeat，2025-10-25）  \n  探讨Perplexity的Comet等AI浏览器的安全风险，这些工具能自主浏览、点击与输入，可能引发数据泄露与操作错误。\n\n- **Thinking Machines challenges OpenAI’s AI scaling strategy first**（VentureBeat，2025-10-24）  \n  有研究挑战OpenAI的模型缩放策略，主张通过改进学习机制而非单纯扩大规模提升AI性能，推动更高效的人工智能发展。\n\n- **Mistral launches its own AI studio for quick development with its European**（VentureBeat，2025-10-24）  \n  Mistral推出AI Studio，支持用户快速构建代理与AI应用，提供基于欧洲技术的开发环境，缩短部署时间。\n\n- **Inside Ring-1T: Ant engineers solve reinforcement learning bottlenecks at**（VentureBeat，2025-10-24）  \n  蚂蚁集团开源万亿参数推理模型Ring-1T，专注于解决强化学习瓶颈，提升复杂任务中的推理效率。\n\n- **Google’s Watch and Learn framework cracks the data bottleneck for training**（VentureBeat，2025-10-23）  \n  Google Cloud与DeepMind推出Watch and Learn框架，解决计算机使用代理（CUA）训练数据稀缺问题，通过规模化收集高质量示例提升代理性能。\n\n- **OpenAI launches Company Knowledge in ChatGPT, letting you access your firm’s**（VentureBeat，2025-10-23）  \n  OpenAI在ChatGPT中推出企业知识功能，允许用户访问内部文档与数据，提供类似Google Search的内部知识检索体验。\n\n- **Microsoft Copilot gets 12 big updates for fall, including new AI assistant**（VentureBeat，2025-10-23）  \n  Microsoft Copilot发布12项更新，深化Windows、Edge与Microsoft 365集成，新增AI助手功能，提升工作效率与数据安全控制。\n\n- **AI is tearing companies apart: Writer AI CEO slams Fortune 500 leaders for**（VentureBeat，2025-10-23）  \n  批评企业将AI转型委派给IT部门导致失败，强调业务领导需直接负责AI实施，避免资源浪费与项目停滞。\n\n- **Sakana AI’s CTO says he’s ‘absolutely sick of transformers’ the tech that powers**（VentureBeat，2025-10-23）  \n  Transformer技术共同创造者表达对当前AI研究狭隘化的不满，呼吁探索替代架构以突破技术局限。\n\n- **What enterprises can take away from Microsoft CEO Satya Nadella’s shareholder**（VentureBeat，2025-10-22）  \n  总结Satya Nadella年度信函中的AI战略见解，强调企业需结合长期规划与敏捷执行，利用AI推动技术栈发展。\n\n- **Kai-Fu Lee’s brutal assessment: America is already losing the AI hardware war**（VentureBeat，2025-10-22）  \n  李开复评估中美AI竞争，认为中国将在消费AI与机器人制造领先，而美国保持企业AI与研究优势。\n\n- **Simplifying the AI stack: the key to scalable, portable intelligence from**（VentureBeat，2025-10-22）  \n  Arm探讨简化AI技术栈的重要性，通过可移植智能支持跨平台部署，提升模型扩展性与效率。\n\n- **Qwen’s new Deep Research update lets you turn its reports into webpages**（VentureBeat，2025-10-21）  \n  阿里Qwen团队升级Deep Research工具，支持将AI生成报告转换为网页，增强研究结果的可共享性与实用性。\n\n- **DeepSeek drops open-source model that compresses text 10x through images**（VentureBeat，2025-10-21）  \n  DeepSeek发布开源OCR模型，通过视觉表示将文本压缩10倍，突破传统token限制，扩展语言模型上下文窗口。\n\n- **Google’s new vibe coding AI Studio experience lets anyone build, deploy apps**（VentureBeat，2025-10-21）  \n  Google AI Studio升级vibe coding界面，支持非开发者快速构建与部署应用，通过社区功能促进创意实现。\n\n- **New Markovian Thinking technique unlocks a path to million-token AI**（VentureBeat，2025-10-21）  \n  Mila研究人员提出Markovian Thinking技术，提升大语言模型复杂推理效率，支持百万级token处理而不增加计算成本。\n\n- **AI’s financial blind spot: why long-term success depends on cost transparency**（VentureBeat，2025-10-21）  \n  分析AI项目成本透明度的必要性，强调财务可见性对长期成功的关键作用，由Apptio与IBM合作呈现。\n\n- **The unexpected benefits of AI PCs: why creativity could be the new**（VentureBeat，2025-10-21）  \n  探讨AI PC在创意领域的潜在优势，通过本地AI处理提升内容生成与协作效率，由HP赞助内容。\n\n- **OpenAI releases ChatGPT Atlas, an AI-enabled web browser to challenge Google**（VentureBeat，2025-10-21）  \n  OpenAI推出AI浏览器Atlas，支持macOS，未来扩展至Windows、iOS与Android，直接挑战Google Chrome的搜索主导地位。\n\n- **Claude Code comes to web and mobile, letting devs launch parallel jobs on**（VentureBeat，2025-10-20）  \n  Anthropic将Claude Code扩展至网页与移动端，支持开发者并行运行编码任务，推动代理群编码（agentic swarm coding）发展。\n\n### 视觉计算与工业视觉\n- **When dirt meets data: ScottsMiracle-Gro saved $150M using AI**（VentureBeat，2025-10-11）  \n  应用无人机视觉系统实时测量堆肥与木屑体积，替代人工测量，提升库存管理精度与效率。同时，开发基于图像的“园艺品酒师”应用，计划于2026年推出，通过照片识别植物、杂草与草坪问题。\n\n- **DeepSeek drops open-source model that compresses text 10x through images**（VentureBeat，2025-10-21）  \n  DeepSeek-OCR开源模型通过视觉表示高效压缩文本，挑战传统文本处理范式，潜在应用于扩展语言模型上下文与工业文档处理。\n\n以上内容均符合您设定的主题范围，并已忽略不相关领域如纯娱乐、金融等。",
+            "根据您提供的主题，我已筛选相关内容。以下是与“工业视觉检测与自动化应用”及“人工智能”相关的资讯摘要：\n\n- **What a massive thermal battery means for energy storage**（MIT Technology Review，2025年10月23日）  \n  该文章报道了Rondo Energy启用了全球最大的热电池系统，容量达100兆瓦时，利用离网太阳能阵列供电，为强化采油提供热能。该系统通过加热砖块至1000°C以上，实现97%的热能回收效率，旨在帮助难以脱碳的制造业（如水泥和钢铁生产）减少排放。尽管当前应用于化石燃料行业引发争议，但技术展示了在工业自动化与能源管理中的潜力，为工业AI和智能化制造提供了清洁能源解决方案的创新案例。",
+            "根据您提供的筛选主题，以下内容与“工业视觉检测与自动化应用”及“人工智能（AI+）”相关，因为它涉及工业过程的自动化和能源技术创新，尽管不是核心视觉技术，但属于工业自动化和智能化范畴。\n\n### 工业视觉检测与自动化应用\n- **This startup is about to conduct the biggest real-world test of aluminum as a zero-carbon fuel**（MIT Technology Review，2025年10月23日）  \n  摘要：Found Energy 初创公司开发了一种利用铝废料作为零碳燃料的技术，通过专有催化剂加速铝与水的反应，释放热量和氢气。该技术已建成100千瓦反应器，计划于2026年初在美国一家工具制造设施中试点，为工业过程提供热能和氢气。这有助于减少工业温室气体排放，并可能应用于金属精炼等自动化制造领域，推动工业智能化转型。尽管不直接涉及视觉检测，但体现了工业自动化和能源创新的趋势。\n\n此内容仅部分涉及工业自动化和AI+主题，但未涵盖macOS、视觉计算等其他指定领域。如需进一步筛选其他主题，请提供更多相关内容。"
+          ]
+        }
+      }
+    ],
+    "AI Agent5": [
+      {
+        "json": {
+          "output": "（一）趋势与创新方向分析\n\n---\n### 🚀 趋势：AI驱动的医学影像增强\n🔧 **技术说明：** 使用生成式深度神经网络将低成本CT扫描转换为高质量PET图像，降低医疗成像成本\n💡 **项目建议：** 开发基于PyTorch的医学影像转换API，使用预训练GAN模型，1-2周可部署原型\n👥 **用户群体：** 中小型医疗机构、远程诊断服务商，市场价值超百亿美元\n---\n\n---\n### 🚀 趋势：自然语言机器人编程\n🔧 **技术说明：** AI代理将自然语言指令分解为机器人可执行任务，实现快速技能部署\n💡 **项目建议：** 构建基于GPT-4 + ROS的机器人指令解析器，支持Python/Node.js，2-3周完成\n👥 **用户群体：** 制造业、物流仓储企业，解决劳动力短缺问题\n---\n\n---\n### 🚀 趋势：视觉增强文本压缩\n🔧 **技术说明：** 通过OCR和视觉算法将文本转换为图像表示，实现10倍压缩率\n💡 **项目建议：** 开发DeepSeek-OCR的Python封装库，集成OpenCV+PIL，1周可验证原型\n👥 **用户群体：** 文档管理、数据存储公司，大模型上下文扩展需求\n---\n\n---\n### 🚀 趋势：AI代理化网页交互\n🔧 **技术说明：** 重新设计网页结构以适应AI代理的机器意图而非人类点击\n💡 **项目建议：** 构建网页AI代理友好度检测工具，使用Playwright+LLM分析，2周完成\n👥 **用户群体：** 网站开发者、SEO服务商，适应AI浏览新时代\n---\n\n---\n### 🚀 趋势：工业视觉库存管理\n🔧 **技术说明：** 无人机视觉系统实时测量原材料体积，替代人工库存盘点\n💡 **项目建议：** 开发基于YOLO+OpenCV的库存体积估算SDK，3-4周部署\n👥 **用户群体：** 制造业、仓储物流、农业企业，提升运营效率\n---\n\n（二）关键词竞品与差异化分析\n\n### 🧩 关键词：人工智能（AI+）\n**🧠 竞品 / 产品对比分析**\n\n```markdown\n| 🏷️ 产品名           | ⚙️ 功能概述         | 🚀 技术亮点           | ⚠️ 不足或改进机会           |\n|:--------------------|:--------------------|:----------------------|:----------------------------|\n| Claude for Excel    | 电子表格AI助手      | 深度集成Office生态    | 仅限于金融场景，功能单一    |\n| Minimax M2          | 开源代理LLM        | 优秀工具调用能力      | 企业支持较弱，文档不足      |\n| Mistral AI Studio   | 快速AI应用开发      | 欧洲技术栈，部署快捷  | 生态系统相对封闭           |\n| Google AI Studio    | 无代码AI开发        | Vibe coding界面友好   | 依赖Google云服务生态       |\n| OpenAI Company Knowledge | 企业知识检索 | 整合内部文档数据      | 数据隐私顾虑，定价不透明    |\n```\n\n💡 **差异化创新建议：**  \n开发跨平台企业AI代理编排平台，使用Python+FastAPI+React技术栈，集成多个LLM（Minimax M2、Claude等），提供统一的企业知识管理和自动化工作流，解决单一AI工具功能局限问题。\n\n---\n\n### 🧩 关键词：视觉计算\n**🧠 竞品 / 产品对比分析**\n\n```markdown\n| 🏷️ 产品名           | ⚙️ 功能概述         | 🚀 技术亮点           | ⚠️ 不足或改进机会           |\n|:--------------------|:--------------------|:----------------------|:----------------------------|\n| DeepSeek-OCR        | 文本视觉压缩        | 10倍压缩率突破        | 应用场景有限，商业化不足    |\n| RADiCAIT医学影像    | CT转PET图像生成     | 降低医疗成本90%       | 仅限于医疗领域，扩展性弱    |\n| Skyline Nav AI      | 无GPS视觉导航       | 10cm精度定位          | 特定硬件要求，成本较高      |\n| Scotts无人机视觉    | 库存体积测量        | 实时监控，成本节约    | 行业特定，通用性不足        |\n```\n\n💡 **差异化创新建议：**  \n构建通用视觉数据压缩SDK，结合DeepSeek-OCR技术栈，支持多种文档类型和行业场景，使用C++/Python混合开发，提供标准化API接口，解决单一场景限制问题。\n\n---\n\n### 🧩 关键词：工业视觉检测与自动化应用\n**🧠 竞品 / 产品对比分析**\n\n```markdown\n| 🏷️ 产品名           | ⚙️ 功能概述         | 🚀 技术亮点           | ⚠️ 不足或改进机会           |\n|:--------------------|:--------------------|:----------------------|:----------------------------|\n| Mbodi机器人训练     | 自然语言技能编程    | 分钟级部署，灵活适应  | 依赖云服务，实时性受限      |\n| Scotts无人机系统    | 原材料库存管理      | 替代人工，精度提升    | 仅限于体积测量，功能单一    |\n| Glīd物流自动化      | 自主电动运输        | 公铁联运，可持续性    | 基础设施要求高，部署复杂    |\n| Found Energy        | 铝燃料工业供热      | 零碳排放，热能高效    | 不涉及视觉检测，技术局限    |\n```\n\n💡 **差异化创新建议：**  \n开发模块化工业视觉检测平台，使用Python+OpenCV+ROS，支持缺陷检测、尺寸测量、库存管理等多功能，提供本地部署和边缘计算选项，解决现有方案功能单一和实时性问题。\n\n---\n\n### 🧩 关键词：macOS系统及生态\n**🧠 竞品 / 产品对比分析**\n\n```markdown\n| 🏷️ 产品名           | ⚙️ 功能概述         | 🚀 技术亮点           | ⚠️ 不足或改进机会           |\n|:--------------------|:--------------------|:----------------------|:----------------------------|\n| ChatGPT Atlas       | AI增强浏览器        | macOS首发，AI集成     | 功能相对基础，生态不完善    |\n| Claude Code         | 跨平台编码工具      | 支持macOS并行开发     | 仅限于编码场景             |\n| Swift Playgrounds   | 交互式编程学习      | 苹果生态深度集成      | 缺乏高级开发功能           |\n| Xcode Cloud         | 云端CI/CD服务       | 苹果开发栈专属        | 封闭生态，定价偏高         |\n```\n\n💡 **差异化创新建议：**  \n开发macOS专属的AI助手开发框架，使用Swift+Core ML，集成系统级API和本地AI处理能力，为开发者提供在Apple Silicon上高效运行AI应用的工具链，充分利用硬件优势。"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "获取 TechCrunch": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape a url and get its content": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Scrape a url and get its content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Scrape a url and get its content1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape a url and get its content1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit2": {
+      "main": [
+        [
+          {
+            "node": "Scrape a url and get its content2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape a url and get its content2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape a url and get its content3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit3": {
+      "main": [
+        [
+          {
+            "node": "Scrape a url and get its content3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "MIT Technology Review — AI 专题": {
+      "main": [
+        [
+          {
+            "node": "Limit3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VentureBeat AI": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TechCrunch AI": {
+      "main": [
+        [
+          {
+            "node": "Limit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape a url and get its content4": {
+      "main": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit4": {
+      "main": [
+        [
+          {
+            "node": "Scrape a url and get its content4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "arXiv — AI 研究论文分类": {
+      "main": [
+        [
+          {
+            "node": "Limit4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "TechCrunch AI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MIT Technology Review — AI 专题",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "arXiv — AI 研究论文分类",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "VentureBeat AI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "获取 TechCrunch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent5": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Convert HTML content to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert HTML content to PDF": {
+      "main": [
+        [
+          {
+            "node": "Make PDF Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make PDF Binary": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Shanghai",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "445b12a8-ebb3-479c-8ac0-96a2611f7d8a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a80d5d568f561dfec63d97a8b61e6f9c81b123939764b3e7daf1cdca52016dec"
+  },
+  "id": "hfwQ3qWbMi5qt5Eb",
+  "tags": []
+}
