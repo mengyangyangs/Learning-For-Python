@@ -55,6 +55,88 @@ Numpy作为Python科学计算的核心库，其应用场景非常广泛，几乎
 
 5.金融与经济建模
 
+# Numpy中的numpy.linalg.xxx的用法与讲解
+## 矩阵与线性方程
+- 函数名：np.linalg.inv(a)
+    - 功能：求矩阵的逆
+    - 示例：np.linalg.inv([1,2],[3,4])
+
+- 函数名：np.linalg.pinv(a)
+    - 功能：求矩阵的伪逆(Moore-Penrose)
+    - 示例：np.linalg.pinv(A),常用于非方阵
+
+- 函数名：np.linalg.det(a)
+    - 功能：计算矩阵行列式
+    - 示例：np.linalg.det([1,2],[3,4])
+
+- 函数名：np.linalg.solve(a,b)
+    - 功能：解线性方程Ax = b
+    - 示例：np.linalg.solve(A,b)
+
+- 函数名：np.linalg.lstsq(a,b)
+    - 功能：最小二乘解(当方程组无精确解)
+    - 示例：np.linalg.lstsq(A,b,rcond=None)
+
+## 矩阵分解(分解是线代核心)
+- 函数名：np.linalg.eig(a)
+    - 功能：求方阵的特征值和特征向量
+    - 示例：vals,vecs = np.linalg.eig(A)
+
+- 函数名：np.linalg.eigh(a)
+    - 功能：对称矩阵或Hermitian矩阵的特征值分解(更高效)
+    - 示例：np.linalg.eigh(A)
+
+- 函数名：np.linalg.qr(a)
+    - 功能：QR分解
+    - 示例：Q,R = np.linalg.qr(A)
+
+- 函数名：np.linalg.svd(a)
+    - 功能：奇异值分解(Singular Value Decomposition)
+    - 示例：U,S,Vt = np.linalg.svd(A)
+
+- 函数名：np.linalg.cholesky(a)
+    - 功能：Cholesky分解(仅是用于正定矩阵)
+    - 示例：L = np.linalg.cholesky(A)
+
+## 向量与范数
+- 函数名：np.linalg.norm(x,ord=None)
+    - 功能：求向量或矩阵的范数
+    - 示例：默认是二范数(欧几里得距离)
+
+- 函数名：np.linalg.norm(x,ord=1)
+    - 功能：一范数
+    - 向量：绝对值之和；矩阵：列和最大值
+
+- 函数名：np.linalg.norm(x, ord=np.inf)
+    - 功能：无穷范数
+    - 示例：向量：最大绝对值；矩阵：行和最大值
+
+## 矩阵条件数与秩
+- 函数名：np.linalg.cond(a)
+    - 功能：条件数(反映矩阵是否病态)
+    - 示例：np.linalg.cond(A)
+
+- 函数名：np.linalg.matrix_rank(a)
+    - 功能：矩阵的秩
+    - 示例：np.linalg.matrix_rank(A)
+
+- 函数名：np.linalg.multi_dot([A,B,C])
+    - 功能：高效地计算多个矩阵连乘
+    - 示例：np.linalg.multi_dot([A,B,C])
+
+## 其他实用工具
+- 函数名：np.linalg.tensorinv(a)
+    - 功能：求张量逆
+
+- 函数名：np.linalg.tensorsolve(a,b)
+    - 功能：解张量方程
+
+- 函数名：np.linalg.eigvals(a)
+    - 功能：只求特征值（不返回特征向量）
+
+- 函数名：np.linalg.eigvalsh(a)
+    - 功能：对称矩阵的特征值（更快）
+
 # Numpy练习题之初级练习题 数组创建与基本操作
 ## 1.创建一个长度为10的一维全零数组
 import numpy as np 
@@ -939,7 +1021,7 @@ import numpy as np
 
 a = np.array([[1,2],[4,5]])
 
-data = np.linalg.norm(a)  # ***范数***
+data = np.linalg.norm(a)  # ***欧几里德范数***
 
 print(data)
 
