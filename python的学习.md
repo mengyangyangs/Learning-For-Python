@@ -1,5 +1,10 @@
 # 运算符
-+ - * / %
+- + ***加***
+- - ***减***
+- * ***乘***
+- / ***除***
+- % ***求余 当被除数小于除数时，余数等于被除数！***
+- // ***整除***
 
 # 自变量variable(也叫做变量)
 a=1     a = "你好"  a = 1.9  
@@ -524,16 +529,17 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - ｜ ***按位或运算符，有1则为1 a|b = 1111***
 - ^ ***按位异或运算符，有0有1则为1 a^b = 0111***
 - ~ ***按位取反运算符，0变1，1变0 ～a = 0011 但是如果 a = 10,则～a = -11 计算公式:-(a+1)***
-- << ***左移动运算符，高位丢弃，低位补0 a<<2 = 0011***
-- ">>" ***右移动运算符 a >> 2 = 0000*** 
+- << ***左移动运算符（相当于✖️2 例如 1<<3 返回8 表示乘以2的3次方），高位丢弃，低位补0 a<<2 = 0011***
+- ">>" ***右移动运算符（相当于➗2 8>>3 返回1 表示除以2的3次方） a >> 2 = 0000*** 
 
 ## 成员运算符
 - in ***如果在指定序列中找到该值，则为True，反之为False x 在 y 序列中 , 如果 x 在 y 序列中返回 True***
 - not in ***如果在指定序列中找不到该值，则为True，反之为False***
 
-## 身份运算符 （is 和 == 的区别: == 看"长得像不像"，is 看"是不是同一个人"）
+## 身份运算符 （is 和 == 的区别: == 看"长得像不像"（比较的是具体的值），is 看"是不是同一个人"（比较的是内存中的地址））
 - is  ***判断两个标识符是不是引用自一个对象  x is y, 类似 id(x) == id(y) , 如果引用的是同一个对象则返回 True，否则返回 False***
 - not is ***是判断两个标识符是不是引用自不同对象***
+- == ***比较二者的值是否相等，如果相等则返回True，反之返回False***
 
 ## 数学函数
 - abs(x) ***返回数字的绝对值 例如 abs(-10) 返回10***
@@ -578,24 +584,35 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - center(width,fillchar) ***返回一个指定的宽度 width 居中的字符串，fillchar 为填充的字符，默认为空格 例如: a = "Hello" a_ = a.center(10,"-") 返回是 --Hello--- ***
 - len(string) ***返回字符串长度 例如: a = "Hello" a_ = len(a) 返回 5***
 - count(str,start=0,end=len(string)) ***返回 str 在 string 里面出现的次数，如果给start和end赋值，则在她们范围内寻找，str出现的次数 例如: a = "Hello" a_ = a.count("l",0(start 可以设置),len(a) end 也可以设置) 返回 2 因为"l"在a中出现两次*** 
-- endswith(str,start=0,end=len(string)) ***检查字符串是否以str结尾,如果给start和end赋值，则在她们范围内寻找,如果是，则返回True，否则返回False 例如: a = "Hello world" a_ = a.endswith("world") 返回True***
+- str.startswith(prefix[, start[, end]]) ***检查字符串是否以str开头，如果如果给start和end赋值，则在她们范围内寻找,如果是，则返回True，否则返回False***
+- str.endswith(str,suffix[, start[, end]]) ***检查字符串是否以str结尾,如果给start和end赋值，则在她们范围内寻找,如果是，则返回True，否则返回False 例如: a = "Hello world" a_ = a.endswith("world") 返回True***
 - find(str,start=0,end=len(string)) ***检查str是否包含在字符串中，如果给start和end赋值，则在她们范围内寻找，如果找到，则返回对应的索引，否则返回 -1 例如: a = "Hello" a_ = a.find("e") 返回 "e"的索引 为 1***
 - index(str,start=0,end=len(string)) ***与find()方法一样，只不过如果str不在字符串中，会报一个异常 例如: a = "Hello" a_ = a.index(b) 返回 ValueError: substring not found *** 
+- rindex() ***从字符串的最右边开始查找,直到返回最后一个匹配项的索引***
+- lindex() ***从字符串的最左边开始查找,直到返回最后一个匹配项的索引***
 - lower() ***转换字符串中所有大写字符为小写 例如: a = "HELLO" a_ = a.lower() 返回 hello***
 - upper() ***转换字符串中所有小写字符为大写 例如: a = "hello" a_ = a.upper() 返回 Hello***
-- strip() ***用于去除字符串开头和结尾的所有空白字符 例如: a = "  Hello  " a_ = a.strip() 返回 Hello ***
+- str.strip() ***用于去除字符串开头和结尾的所有空白字符 例如: a = "  Hello  " a_ = a.strip() 返回 Hello ***
 - lstrip() ***用于截掉字符串左边的空格或指定字符 例如: a = "---777Hello" a_ = a.lstrip("-,7") 返回 Hello***
 - rstrip() ***用于截掉字符串末尾的空格或指定字符 例如: a = "Hello---44" a_ = a.rstrip("-,4) 返回 Hello lstrip和rstrip二者可以结合起来 例如: a = "---Hello___" a_ = a.lstrip("-").rstrip("_") 返回 Hello***
-- replace(old,new,times) ***把字符串中的old替换成new，如果指定times，则不超过times次 例如: a = "Hello" a_ = a.replace("Hello","hello") 返回 hello***
+- str.replace(old,new,times) ***把字符串中的old替换成new，如果指定times，则不超过times次 例如: a = "Hello" a_ = a.replace("Hello","hello") 返回 hello***
 - max(str) ***返回字符串中最大的字母 例如: a = "Hello" a_ = max(a) 返回 o ***
 - min(str) ***返回字符串中最小的字母 例如: a = "Hello" a_ = min(a) 返回 H ***
-- str.split() ***按空格拆分单词***
+- str.split() ***将字符串分割成单词列表（默认按空格分割）,并返回一个列表***
 
 ## 字符串的大小写转换 zz = "www.cc123.com"
 - str.lower() ***把所有字符中的大写字母转换成小写字母 zz.lower() 返回 www.cc123.com***
 - str.upper() ***把所有字符中的小写字母转换成大写字母 zz.upper() 返回 WWW.CC123.COM***
 - str.title() ***把每个单词的第一个字母转化为大写，其余小写 zz.title() 返回 Www.Cc123.Com***
 - str.capitalize() ***把第一个字母转化为大写字母，其余小写 zz.capitalize() 返回 Www.cc123.com***
+- str.join()  ***用于连接字符串，字符串join的用法(只能用于字符串)：“分隔符”.join(可迭代对象) 例如: a = ["a","b","c"] a_ = " ".join(a) 返回a b c 或者 a_ = "-".join(a) 返回 a-b-c***
+
+## 字符串的判断(字母，数字，符号)
+- isalpha() ***判断字符串中的字符是否都是字母***
+- isdigit() ***判断字符串中的字符是否都是数字***
+- isalnum() ***判断字符串中的字符是否是字母和数字***
+- islower()/isupper() ***判断字符串中的字符是否是小写/大写***
+- isspace() ***判断字符串中的字符是否包含空白字符***
 
 ## 列表
 - 列表也支持使用切片的方法去删除和追加元素噢，同时也能嵌套列表 ***例如: list = ["111","222","333"] list[1:]  返回 222,333 a = ["1","2"] b = ["3","4"] c = a+b 返回["1","2","3","4"]***
@@ -615,9 +632,9 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - list.extend(seq) ***用于在列表末尾一次性追加另一个序列中的多个值 seq可以是列表，元组，字典，集合等等 与 list.append 不同的是，list.append 追加整个对象为一个元素，而list.extend 是把可迭代对象中的元素逐个加进去 注意，使用extend不会生成新的列表***
 - list.index(obj) ***从列表中找出某个值，第一个匹配项的索引位置 例如: a = [1,1,2,3] a.index(1) 返回0 ***
 - list.insert(index,obj) ***将对象插入列表，可以指定位置插入 例如: a = [1,2,4,6] a.insert(2,3) 返回[1,2,3,4,6]***
-- list.pop(index=-1) ***用于移除列表中的一个元素(默认最后一个元素)，并返回该元素的值 例如: a = [1,2,3,4] a.pop() 返回 4***
+- list.pop(index=-1) ***删除指定索引的列表项，(默认删除最后一个元素)，并返回该元素的值 例如: a = [1,2,3,4] a.pop() 返回 4***
 - del list[ ] ***用于删除列表中的元素，只能通过索引的值来删除元素，不能指定删除元素，如果想要指定删除某个元素，可以使用 list.remove(obj)的方法，或者 del list[list.index(obj)] 通过索引的方式来删除***
-- list.remove(obj) ***移除列表中某个值的第一个匹配项 例如: a = [1,25,1,2,3,4] a.remove(1) 返回 [25,1,2,3,4]***
+- list.remove(obj) ***删除指定值的列表项，如果重复出现值，则删除第一次出现的值 例如: a = [1,25,1,2,3,4] a.remove(1) 返回 [25,1,2,3,4]***
 - list.reverse() ***反向列表中的元素 例如: a = [1,3,5,6,7] a.reverse() 返回 [7,6,5,3,1]***
 - list.sort(key=None,reverse=False) ***对原列表进行排序，如果指定参数key，则使用比较函数指定的比较函数 reverse=False 默认升序 例如: a = [1,3,2,7,5,6] a.sort() 返回[1,2,3,5,6,7]***
 - list.clear() ***清空列表 例如: a = [1,2,3] a.clear() 返回[] 类似 del a[:] 返回[] 二者是同样的效果***
@@ -639,16 +656,23 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - srt(dict) ***输出字典，将字典 转换成字符串（str 类型）例如: a = {'name':'Alice','age':19,'city':'New York'} 返回 字典类型 str(a) 返回 字符串类型***
 - type(variable) ***返回输入的变量类型，如果变量是字典就返回字典类型***
 
-## 字典的方法
+## 字典的方法（ new_dict = {v:k for k,v in d.items()} 用于键,值的调换）
 - dict.clear() ***删除字典内所有元素 例如: a = {'a':1,'b':2} a.clear() 返回 {} ***
 - dict.copy() ***返回一个字典的浅复制***
 - dict.fromkeys(seq,value) ***创建一个新的字典，以seq作为键，value作为键的初始值，默认设置为None 例如: a = {'name','age'} a_ = dict.fromkeys(a,10) 返回 {'name':10,'age':10}***
-- dict.get(key,value) ***返回指定键的值 如果键不在字典中返回默认值，如果不指定默认值，则返回 None 例如: a = {"name":lili,"age":20} a_ = a.get("name") 返回 lili a_ = a.get("fuck") 返回 None***
+- dict.get(key,value) ***返回指定键的值 如果键不在字典中返回默认值，如果不指定默认值，则返回 None 例如: a = {"name":lili,"age":20} a_ = a.get("name") 返回 lili 如果a_ = a.get("fuck") 返回 None***
 - key in dict ***判断键是否在字典中，如果在则返回True，否则False 例如: a = {'name':lili,'age':20} a_ = 'name' in a 返回 True***
-- dict.items() ***以列表返回视图对象 也可以单独打印键和值 dict.keys表示键 dict.values表示值***
+- dict.items() ***返回的内容是以元组形式的(key和value),也可以单独打印键和值 dict.keys表示键(列表形式) dict.values表示值(列表形式)***
 - dict.update(dict2) ***把dict2的键和值，更新到dict中 例如: a = {'name':lili,'age':20} a_ = {'country':CN,'city':shanghai} a.update(a_) 返回 {'name':lili,'age':20,'country':CN,'city':shanghai} 或者也可以用 res = {**a,**a_} ***
 - dict.pop(key,default) ***删除key对应的值，返回被删除的值。如果键不存在，则可以返回一个默认值 例如: a = {'name':lili,'age':20} a_ = a.pop('name') 返回 lili a_ = a.pop('city',None) 返回 None del dict(key.default)*** 
 - dict.popitem() ***返回并删除字典中的最后一对键值***
+
+## collection库中的Counter方法 假设：count = Counter(words) Counter是字典的子类哟，具有字典的所有功能，还增加了计数功能
+- count.most_common() ***统计最常见的元素***
+- count.total() ***总计数***
+- count.elements() ***所有元素***
+- count.subtract(other) ***减法操作***
+- count.update(other) ***更新操作***
 
 ## 集合内置方法（a = {1,2,3,4},b = {3,4,5,6）
 - set.add() ***为集合添加新的元素 a.add(5) 返回 {1,2,3,4,5}***
@@ -679,6 +703,7 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - except ***捕获异常***
 - finally ***无论是否发生异常都会执行的代码块***
 - raise ***抛出异常***
+- else ***没有异常时执行的代码***
 
 ## 函数定义
 - def ***定义函数 如果函数里面没有定义其他的函数，则称为普通函数，如果函数中定义匿名函数 则叫做 高阶函数，此时调用函数时，需要注意传参***
@@ -712,8 +737,8 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - as ***为导入的模块或对象重命名***
 
 ## 作用域
-- global ***声明全局变量 必须在函数第一次使用变量之前声明，不能在读取之后再声明该变量是全局变量，不然就会报错 SyntaxError: name 'x' is used prior to global declaration(语法错误：在全局声明之前使用了名称“x”)***
-- nonlocal ***声明非局部变量(用于嵌套函数)***
+- global ***声明全局变量 必须在第一次使用变量之前声明，不能在读取之后再声明该变量是全局变量，不然就会报错 SyntaxError: name 'x' is used prior to global declaration(语法错误：在全局声明之前使用了名称“x”)***
+- nonlocal ***可以让内层函数修改外层函数的变量 不能声明已经声明为全局变量的变量(用于嵌套函数)***
 
 ## 异步编程
 - async ***声明异步函数***
@@ -729,6 +754,19 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - end ***将结果输出到同一行，或者在输出的末尾添加不同的字符 例如: print(a,end=",")***
 -  “*”  ***用于解包序列(list，tuple)等***
 - “**  ***用于解包字典(键值对)***
+- round ***用于对数字做四舍五入，语法:round(number,ndigits) number:要处理的数字 ndigits:保留的小数位数 例如:a = 3.14556 a_ = round(a,2) 表示保留两位小数 返回 3.15***
+- ord(str) ***表示根据字符找序号，例如ord("h") 返回的是104***
+- chr(数字) ***表示根据序号找字符,例如chr(104) 返回的是字符串h***
+- locals() ***列出所有本地变量***
+- str.isidentifier() ***判断字符串str是否符合标准，即不以数字做为开头***
+- _ ***表示上次表达式的值***
+- sorted() ***排序时迭代***
+- map() ***对指定序列中的每一个元素应用一个给定的函数 语法:map(funtion，iterable) iterable:一个或多个可迭代对象***
+- reduce() ***对序列中的元素按照一定的规则进行累积计算 语法:reduce(function,iterable,initializer) iterable:一个或多个可迭代对象 initializer:可选参数，作为累积计算的初始值***
+- filter() ***从可迭代对象(如列表，元组，字符串)中筛出满足特定条件的元素，并返回一个迭代器，包含所有”判断为True“的元素 语法:filter(function,interable)***
+- any() ***与 或运算一样，有真则为真，全假则为假***
+- all() ***与 与运算一样，全真则为真，有假则为假***
+- enumerate(iterable,start=0) ***在遍历一个可迭代对象时，同时获取到元素的索引和元素本身***
 
 # os库中常用的函数
 ## 文件和目录相关
@@ -742,7 +780,7 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - os.stat(path) ***获取文件或目录的详细信息(大小，创建时间，修改时间等)***
 
 ## 路径操作
-- os.path.join(path1,path2...) ***拼接路径，自动加斜杠***
+- os.path.join(path1,path2...) ***拼接路径，自动加斜杠 os.path.join(filename,file)***
 - os.path.exists(path) ***判断路径是否存在(文件或目录都可以)***
 - os.path.isfile(path) ***判断路径是否是文件***
 - os.path.isdir(path) ***判断路径是否是目录***
@@ -751,11 +789,14 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - os.path.dirname(path) ***返回路径中的目录部分***
 - os.path.split(path) ***返回(目录，文件名)的元组***
 - os.path.splitext(path) ***分割文件名和拓展名，返回(文件名，后缀)***
+- os.path.getsize(path) ***返回指定文件的大小(字节数)***
+- os.path.getctime(path) ***返回指定文件的创建时间(在windows),而在macOS和linux则返回的是文件最近修改的时间***
+- os.path.getmtime(path) ***返回文件最后修改的时间***
 
 ## 当前工作目录和环境
 - os.getcwd() ***获取当前工作目录***
 - os.chdir(path) ***切换当前工作目录***
-- os.environ ***获取系统环境变量***
+- os.environ() ***获取系统环境变量***
 - os.putenv(key,value) ***设置环境变量(临时有效)***
 
 ## 其他常用
@@ -764,8 +805,14 @@ print(delect) # 但是返回的结果是 None 而不是对应的值 如果想要
 - os.path.getsize(path) ***获取文件大小（字节为单位)***
 - os.path.getmtime(path) ***获取文件修改时间（时间戳)***
 
+# json库中常用的函数
+## 序列化(将python对象转换为json格式)
+- json.dumps(obj) ***将python对象(如字典，列表)转换为json格式的字符串***
+- json.dump(obj,fp) ***将python对象(如字典，列表)转换为json格式，并写入fp(写入文件)***
 
-
+## 反序列化(将json格式转换为python对象)
+- json.loads(s) ***将json格式的字符串(s)解析为python对象(如字典，列表)***
+- json.load(fp) ***从文件对象fp中读取json格式的数据，并将其解析为python对象(读取文件)***
 
 
 
